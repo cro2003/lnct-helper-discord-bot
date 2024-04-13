@@ -1,5 +1,6 @@
 import discord
 import rgpvApi
+import lnctApi
 import json
 import os
 from dotenv import load_dotenv
@@ -46,6 +47,14 @@ async def on_message(message):
         msg = await message.channel.send('Fetching Result...')
         await getResult(enrollId, semester, msg)
         return
+    elif message.content.startswith('$profile'):
+        try:
+            username = str(message.content.split(' ')[1])
+            password = int(message.content.split(' ')[2])
+        except IndexError:
+            await message.channel.send('Invalid Command! \nUsage: $result <username> <password>')
+            return
+        accsoft = lnctApi.accsoft()
 
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
