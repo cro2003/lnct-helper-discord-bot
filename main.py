@@ -69,6 +69,25 @@ async def on_message(message):
                   f'Email: {data["email"]}\n'\
                   f'Profile Image: [Link]({data["profileImage"]})\n'
         await message.channel.send(content)
+    elif message.content.startswith('$library'):
+        try:
+            username = str(message.content.split(' ')[1])
+            password = str(message.content.split(' ')[2])
+        except IndexError:
+            await message.channel.send('Invalid Command! \nUsage: $library <username> <password>')
+            return
+        accsoft = lnctApi.accsoft(username, password)
+        data = json.loads(accsoft.libRecord())
+        if data.get('error'):
+            await message.channel.send(content=data['error'])
+            return
+        content = f'Name: {data["name"]}\n'
+        for book in data['bookRecord']:
+            content += '\n' \
+                       f'Book Name: {book["bookName"]}\n' \
+                       f'Issue Date: {book["date"]}\n' \
+                       f'Return Date: {book["returnedDate"]}\n'
+        await message.channel.send(content)
     elif message.content.startswith('$hello'):
         await message.channel.send('Hello!')
         return
